@@ -1,5 +1,6 @@
 ﻿using Library.BookInventory.Models;
 using Library.BookInventory.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace Library.BookInventory.Data
@@ -8,9 +9,9 @@ namespace Library.BookInventory.Data
     {
         private readonly LibraryContext _context;
 
-        public BookRepository()
+        public BookRepository(LibraryContext context)
         {
-            _context = new LibraryContext();
+            _context = context;
         }
 
         public bool Exists(string title, string author)

@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Inventory</title>
+    <style>
+        <link rel="stylesheet" href="css/styles.css" >{}
+    </style>
+</head>
+<body>
+    <h1>Book Inventory</h1>
+
+    <div>
+        <h2>Add Book</h2>
+        <form id="addBookForm">
+            <input type="text" id="title" placeholder="Title" required />
+            <input type="text" id="author" placeholder="Author" required />
+            <input type="text" id="category" placeholder="Category" required />
+            <button type="submit">Add Book</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Books</h2>
+        <ul id="bookList">
+            <!-- Book list will be displayed here -->
+        </ul>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:5000/api/books';  // Change this to your backend URL
+
+        // Fetch and display books
+        function getBooks() {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const bookList = document.getElementById('bookList');
+                    bookList.innerHTML = '';
+                    data.forEach(book => {
+                        const li = document.createElement('li');
+                        li.textContent = `${book.title} by ${book.author} (${book.category})`;
+                        bookList.appendChild(li);
+                    });
+                });
+        }
+
+        // Handle Add Book form submission
+        document.getElementById('addBookForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const category = document.getElementById('category').value;
+
+            const book = { title, author, category };
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(book)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Book added successfully!');
+                    getBooks(); // Refresh the book list
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // Initial load of books
+        getBooks();
+    </script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Library.BookInventory.Models;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace Library.BookInventory.Data
 {
@@ -13,19 +12,19 @@ namespace Library.BookInventory.Data
         {
         }
 
-        public LibraryContext()
-        {
-        }
+        // public LibraryContext()
+        // {
+        // }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseMySql(
-                    "server=localhost;database=librarydb;user=root;password=Deojer2004!;",
-                    ServerVersion.AutoDetect("server=localhost;database=librarydb;user=root;password=Deojer2004!;")
-                );
-            }
-        }
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     if (!optionsBuilder.IsConfigured)
+        //     {
+        //         optionsBuilder.UseMySql(
+        //             "server=localhost;database=librarydb;user=root;password=Deojer2004!;",
+        //             ServerVersion.AutoDetect("server=localhost;database=librarydb;user=root;password=Deojer2004!;")
+        //         );
+        //     }
+        // }
     }
 }

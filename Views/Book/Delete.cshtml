@@ -1,0 +1,27 @@
+﻿@model Library.BookInventory.Models.Book
+
+@{
+    ViewData["Title"] = "Delete Book";  // Set the page title
+    Layout = "_Layout";  // Specify the layout file to use
+
+}
+
+<h2>Are you sure you want to delete the following book?</h2>
+
+<!-- Displaying Book Details -->
+<div class="book-details mb-4">
+    <p><strong>Title:</strong> @Model.Title</p>
+    <p><strong>Author:</strong> @Model.Author</p>
+    <p><strong>Category:</strong> @Model.Category</p>
+</div>
+
+<!-- Form for Deletion Confirmation -->
+<form asp-action="Delete" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <!-- Delete Confirmation Button -->
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+
+    <!-- Cancel Button -->
+    <a href="@Url.Action("Index")" class="btn btn-secondary">No, Go Back</a>
+</form>

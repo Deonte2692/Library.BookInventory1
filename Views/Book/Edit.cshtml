@@ -1,0 +1,36 @@
+﻿@model Library.BookInventory.Models.Book
+
+@{
+    ViewData["Title"] = "Edit Book";  // Set the page title
+    Layout = "_Layout";  // Specify the layout file to use
+
+}
+
+<h2>Edit Book</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />  <!-- Hidden field to preserve book ID -->
+    <!-- Title Input Field -->
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <input type="text" id="Title" name="Title" class="form-control" value="@Model.Title" required />
+    </div>
+
+    <!-- Author Input Field -->
+    <div class="form-group">
+        <label for="Author">Author</label>
+        <input type="text" id="Author" name="Author" class="form-control" value="@Model.Author" required />
+    </div>
+
+    <!-- Category Input Field -->
+    <div class="form-group">
+        <label for="Category">Category</label>
+        <input type="text" id="Category" name="Category" class="form-control" value="@Model.Category" required />
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-success">Update Book</button>
+</form>
+
+<!-- Link to go back to the book list -->
+<a href="@Url.Action("Index")" class="btn btn-secondary mt-3">Back to Book List</a>

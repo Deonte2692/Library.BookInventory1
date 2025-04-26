@@ -1,66 +1,126 @@
 ﻿using Library.BookInventory.Models;
 using Library.BookInventory.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Library.BookInventory.Controllers
 {
-    public class BookController
+    public class BookController : Controller
     {
-        private readonly BookRepository _bookRepository;
+        private readonly LibraryContext _context;
 
-        public BookController()
+        public BookController(LibraryContext context)
         {
-            _bookRepository = new BookRepository();
+            _context = context;
         }
 
-        public string AddBook(Book book)
+        // Display list of all books
+        public IActionResult Index()
         {
-            if (_bookRepository.Exists(book.Title, book.Author))
+            var books = _context.Books.ToList();
+            return View(books);  // Pass books to Index view
+        }
+
+        // Show form to add a new book
+        public IActionResult Add()
+        {
+            // Initialize a new Book object and set default values for required properties
+            var newBook = new Book
             {
-                return "Error: Book already exists.";
-            }
+                Title = string.Empty,  // Set Title to an empty string or some default value
+                Author = string.Empty, // Same for Author and Category if needed
+                Category = string.Empty
+            };
 
-            _bookRepository.Add(book);
-            return "Book added successfully.";
+            return View(newBook);  // Pass the newBook to the view
         }
 
-        public string DeleteBook(int id)
+
+        // Handle form submission for adding a new book
+        [HttpPost]
+        public IActionResult Add(Book newBook)
         {
-            var book = _bookRepository.GetById(id);
+            if (ModelState.IsValid)
+            {
+                _context.Books.Add(newBook);
+                _context.SaveChanges();
+                return RedirectToAction("Index");  // Redirect back to the Index page after adding
+            }
+            return View(newBook);  // If model is not valid, show form again
+        }
+
+
+        // Show form to edit an existing book
+        public IActionResult Edit(int id)
+        {
+            var book = _context.Books.FirstOrDefault(b => b.Id == id);
             if (book == null)
             {
-                return "Error: Book not found.";
+                return NotFound();  // Return a 404 if the book doesn't exist
             }
-
-            _bookRepository.Delete(id);
-            return "Book deleted successfully.";
+            return View(book);  // Pass book data to Edit view
         }
 
-        public string UpdateBook(int id, Book updatedBook)
+        // Handle form submission for updating a book
+        [HttpPost]
+        public IActionResult Edit(Book updatedBook)
         {
-            var existingBook = _bookRepository.GetById(id);
-            if (existingBook == null)
+            if (ModelState.IsValid)
             {
-                return "Error: Book not found.";
+                _context.Books.Update(updatedBook);
+                _context.SaveChanges();
+                return RedirectToAction("Index");  // Redirect to Index page after updating
             }
-
-            existingBook.Title = updatedBook.Title;
-            existingBook.Author = updatedBook.Author;
-            existingBook.Category = updatedBook.Category;
-
-            _bookRepository.Update(existingBook);
-            return "Book updated successfully.";
+            return View(updatedBook);  // If model is not valid, show form again
         }
 
-        public string SearchBooks(string searchTerm)
+        // Show confirmation page for deleting a book
+        public IActionResult Delete(int id)
         {
-            var result = _bookRepository.SearchBooks(searchTerm).ToList();
-            return result.Any() ? string.Join("\n", result.Select(b => $"{b.Title} by {b.Author} ({b.Category})")) : "No books found.";
+            var book = _context.Books.FirstOrDefault(b => b.Id == id);
+            if (book == null)
+            {
+                return NotFound();  // Return a 404 if the book doesn't exist
+            }
+            return View(book);  // Pass book data to Delete view
         }
 
-        public string SortBooksByTitle()
+        // Handle deletion of a book
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeleteConfirmed(int id)
         {
-            var result = _bookRepository.SortBooksByTitle().ToList();
-            return result.Any() ? string.Join("\n", result.Select(b => $"{b.Title} by {b.Author} ({b.Category})")) : "No books found.";
+            var book = _context.Books.FirstOrDefault(b => b.Id == id);
+            if (book != null)
+            {
+                _context.Books.Remove(book);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");  // Redirect to Index page after deletion
         }
+
+        public IActionResult Search(string searchTerm)
+        {
+            Console.WriteLine($"Search triggered with term: {searchTerm}");  // Debug log
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                var books = _context.Books
+                    .Where(b => b.Title.Contains(searchTerm) || b.Author.Contains(searchTerm) || b.Category.Contains(searchTerm))
+                    .ToList();
+
+                Console.WriteLine($"Books found: {books.Count}");  // Debug log
+
+                ViewData["SearchTerm"] = searchTerm;  // Set the search term to retain it in the view
+
+                return View(books);
+            }
+            else
+            {
+                ViewData["SearchTerm"] = "";  // Clear search term if no search was made
+                return View(new List<Book>());
+            }
+        }
+
     }
 }

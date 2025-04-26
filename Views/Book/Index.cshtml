@@ -1,0 +1,72 @@
+﻿@{
+    Layout = "_Layout";  // This tells it to use the layout from Views/Shared
+}
+
+@{
+    ViewData["Title"] = "Book Inventory";  // Title of the page
+    Layout = "_Layout";  // Specify the layout file to use
+
+}
+
+<div class="container mt-4">
+    <h1>Welcome to Your Personal Library</h1>
+
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <form asp-action="Search" method="get">
+                <div class="form-group">
+                    <label for="SearchTerm">Search by Title, Author, or Category</label>
+                    <input type="text" id="SearchTerm" name="searchTerm" class="form-control" placeholder="Enter search term..." />
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Book Button -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3 text-center">
+            <a href="@Url.Action("Add")" class="btn btn-success">Add New Book</a>
+        </div>
+    </div>
+
+    <!-- Books Table -->
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <h2>Book List</h2>
+
+            @if (Model != null && Model.Count > 0)
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var book in Model)
+                        {
+                            <tr>
+                                <td>@book.Title</td>
+                                <td>@book.Author</td>
+                                <td>@book.Category</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", new { id = book.Id })" class="btn btn-warning btn-sm">Edit</a>
+                                    <a href="@Url.Action("Delete", new { id = book.Id })" class="btn btn-danger btn-sm">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No books available. Please add a book.</p>
+            }
+        </div>
+    </div>
+</div>

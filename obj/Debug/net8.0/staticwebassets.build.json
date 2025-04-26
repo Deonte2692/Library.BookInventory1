@@ -1,0 +1,58 @@
+{
+  "Version": 1,
+  "Hash": "dagZgLRZKzBau1IKylQBa420l5/aRimGiyutZtIr+DQ=",
+  "Source": "Library.BookInventory",
+  "BasePath": "_content/Library.BookInventory",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "Library.BookInventory\\wwwroot",
+      "Source": "Library.BookInventory",
+      "ContentRoot": "C:\\Users\\db00434\\source\\repos\\Library.BookInventory1\\wwwroot\\",
+      "BasePath": "_content/Library.BookInventory",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\db00434\\source\\repos\\Library.BookInventory1\\wwwroot\\css\\styles.css",
+      "SourceId": "Library.BookInventory",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\db00434\\source\\repos\\Library.BookInventory1\\wwwroot\\",
+      "BasePath": "_content/Library.BookInventory",
+      "RelativePath": "css/styles.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\styles.css"
+    },
+    {
+      "Identity": "C:\\Users\\db00434\\source\\repos\\Library.BookInventory1\\wwwroot\\index.html",
+      "SourceId": "Library.BookInventory",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\db00434\\source\\repos\\Library.BookInventory1\\wwwroot\\",
+      "BasePath": "_content/Library.BookInventory",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    }
+  ]
+}
