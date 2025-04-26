@@ -2,9 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\Controllers",
+    "\\Data",
     "\\Models",
     "\\Tests"
   ],
-  "SelectedNode": "\\Models",
+  "SelectedNode": "\\Library.BookInventory.sln",
   "PreviewInSolutionExplorer": false
 }

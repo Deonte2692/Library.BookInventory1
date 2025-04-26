@@ -1,6 +1,7 @@
-﻿using Library.BookInventory.Models;
+﻿using System;
 using Library.BookInventory.Controllers;
-using System;
+using Library.BookInventory.Data;
+using Library.BookInventory.Models;
 
 namespace Library.BookInventory
 {
@@ -11,6 +12,11 @@ namespace Library.BookInventory
             var controller = new BookController();
             bool running = true;
 
+            using (LibraryContext context = new LibraryContext())
+            {
+                context.Database.EnsureCreated();  // Ensure the database is created (for testing purposes)
+            }
+
             Console.WriteLine("=== Welcome to the Book Inventory System ===");
 
             while (running)
@@ -18,96 +24,33 @@ namespace Library.BookInventory
                 Console.WriteLine("\nChoose an option:");
                 Console.WriteLine("1. Add Book");
                 Console.WriteLine("2. Delete Book");
-                Console.WriteLine("3. View All Books");
-                Console.WriteLine("4. Edit Book");
-                Console.WriteLine("5. Search Books");
-                Console.WriteLine("6. Sort Books");
-                Console.WriteLine("7. Exit");
+                Console.WriteLine("3. Update Book");
+                Console.WriteLine("4. Search Books");
+                Console.WriteLine("5. Sort Books");
+                Console.WriteLine("6. Exit");
 
                 var input = Console.ReadLine();
 
                 switch (input)
                 {
                     case "1":
-                        Console.Write("Enter Title: ");
-                        var title = (Console.ReadLine() ?? "").Trim();
-                        Console.Write("Enter Author: ");
-                        var author = (Console.ReadLine() ?? "").Trim();
-                        Console.Write("Enter Category: ");
-                        var category = (Console.ReadLine() ?? "").Trim();
-
-                        var newBook = new Book { Title = title, Author = author, Category = category };
-
-                        var addResult = controller.AddBook(newBook);
-                        Console.WriteLine(addResult);
+                        AddBookUI(controller);
                         break;
-
                     case "2":
-                        Console.Write("Enter Book ID to delete: ");
-                        if (int.TryParse(Console.ReadLine(), out int deleteId))
-                        {
-                            var deleteResult = controller.DeleteBook(deleteId);
-                            Console.WriteLine(deleteResult);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid input. Please enter a valid number.");
-                        }
+                        DeleteBookUI(controller);
                         break;
-
                     case "3":
-                        var books = controller.SortBooksByTitle();
-                        Console.WriteLine("\n--- Book List ---");
-                        foreach (var book in books)
-                        {
-                            Console.WriteLine($"ID: {book.Id}, Title: {book.Title}, Author: {book.Author}, Category: {book.Category}");
-                        }
+                        UpdateBookUI(controller);
                         break;
-
                     case "4":
-                        Console.Write("Enter Book ID to edit: ");
-                        if (int.TryParse(Console.ReadLine(), out int editId))
-                        {
-                            Console.Write("Enter new Title (or leave blank to keep current): ");
-                            var newTitle = Console.ReadLine();
-                            Console.Write("Enter new Author (or leave blank to keep current): ");
-                            var newAuthor = Console.ReadLine();
-                            Console.Write("Enter new Category (or leave blank to keep current): ");
-                            var newCategory = Console.ReadLine();
-
-                            var editResult = controller.EditBook(editId, newTitle, newAuthor, newCategory);
-                            Console.WriteLine(editResult);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid input. Please enter a valid number.");
-                        }
+                        SearchBooksUI(controller);
                         break;
-
                     case "5":
-                        Console.Write("Enter a search term (title, author, or category): ");
-                        var searchTerm = Console.ReadLine();
-                        var results = controller.SearchBooks(searchTerm);
-                        Console.WriteLine("\n--- Search Results ---");
-                        foreach (var book in results)
-                        {
-                            Console.WriteLine($"ID: {book.Id}, Title: {book.Title}, Author: {book.Author}, Category: {book.Category}");
-                        }
+                        SortBooksUI(controller);
                         break;
-
                     case "6":
-                        var sortedBooks = controller.SortBooksByTitle();
-                        Console.WriteLine("\n--- Sorted Book List ---");
-                        foreach (var book in sortedBooks)
-                        {
-                            Console.WriteLine($"ID: {book.Id}, Title: {book.Title}, Author: {book.Author}, Category: {book.Category}");
-                        }
-                        break;
-
-                    case "7":
                         running = false;
                         break;
-
                     default:
                         Console.WriteLine("Invalid option. Try again.");
                         break;
@@ -115,6 +58,82 @@ namespace Library.BookInventory
             }
 
             Console.WriteLine("Exiting the system. Goodbye!");
+        }
+
+        static void AddBookUI(BookController controller)
+        {
+            Console.Write("Enter Title: ");
+            var title = Console.ReadLine().Trim();
+
+            Console.Write("Enter Author: ");
+            var author = Console.ReadLine().Trim();
+
+            Console.Write("Enter Category: ");
+            var category = Console.ReadLine().Trim();
+
+            var newBook = new Book { Title = title, Author = author, Category = category };
+
+            var result = controller.AddBook(newBook);
+            Console.WriteLine(result);
+        }
+
+        static void DeleteBookUI(BookController controller)
+        {
+            Console.Write("Enter Book ID to delete: ");
+            if (int.TryParse(Console.ReadLine(), out int id))
+            {
+                var result = controller.DeleteBook(id);
+                Console.WriteLine(result);
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a valid number.");
+            }
+        }
+
+        static void UpdateBookUI(BookController controller)
+        {
+            Console.Write("Enter Book ID to update: ");
+            if (int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.Write("Enter new Title: ");
+                var title = Console.ReadLine().Trim();
+
+                Console.Write("Enter new Author: ");
+                var author = Console.ReadLine().Trim();
+
+                Console.Write("Enter new Category: ");
+                var category = Console.ReadLine().Trim();
+
+                var updatedBook = new Book
+                {
+                    Id = id,
+                    Title = title,
+                    Author = author,
+                    Category = category
+                };
+
+                var result = controller.UpdateBook(id, updatedBook);
+                Console.WriteLine(result);
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a valid number.");
+            }
+        }
+
+        static void SearchBooksUI(BookController controller)
+        {
+            Console.Write("Enter search term (Title, Author, or Category): ");
+            var searchTerm = Console.ReadLine().Trim();
+            var result = controller.SearchBooks(searchTerm);
+            Console.WriteLine(result);
+        }
+
+        static void SortBooksUI(BookController controller)
+        {
+            var result = controller.SortBooksByTitle();
+            Console.WriteLine(result);
         }
     }
 }
